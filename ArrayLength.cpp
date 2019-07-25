@@ -9,7 +9,7 @@
  *  Its work based on C++ type inference
  *  If we pass an array to function by reference, its
  *  type will be T(&)[Length]
- *  We use this fatc here
+ *  We use this fact here
  *
  *******************************************************
  *
