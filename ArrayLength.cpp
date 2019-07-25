@@ -34,6 +34,7 @@ int aiFirst[] = { 1, 2, 3, 4, 5 };
 int aiSecond[ArrayLength(aiFirst)]; // It works
 
 assert( ArrayLength(aiFirst) == ArrayLength(aiSecond) );
+assert( ArrayLength(aiSecond) == 5 );
 
 //
 // But prefer using std::array<T, Len> in modern C++
