@@ -1,5 +1,8 @@
-# ArrayLength
+# Utilites
 
+This repository contains various utility functions, that can help you with C++ programming.
+
+### ArrayLength
 Funcion that calculates length of C-style array in compile time. Requires at least C++11
 
 It was created to use with old API in modern C++
