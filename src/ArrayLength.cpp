@@ -19,20 +19,3 @@ constexpr auto ArrayLength(const T(&)[Length])
 {
     return Length;
 }
-
-
-
-// 
-// It calculates size in compile time, so you can do
-// like that
-//
-int aiFirst[] = { 1, 2, 3, 4, 5 };
-int aiSecond[ArrayLength(aiFirst)]; // It works
-
-assert( ArrayLength(aiFirst) == ArrayLength(aiSecond) );
-assert( ArrayLength(aiSecond) == 5 );
-
-//
-// But prefer using std::array<T, Len> in modern C++
-// This function makes your work with OLD API easier
-//
