@@ -11,6 +11,7 @@
  *  Contact: gfirsov007@gmail.com
  *  Date: 27.08.2019
  *******************************************************/
+#pragma once
 
 template
 <

@@ -7,18 +7,16 @@
  *******************************************************
  *  Author: Firsov Georgy
  *  Contact: gfirsov007@gmail.com
- *  Date: 25.07.2019
+ *  Date: 27.08.2019
  *******************************************************/
-
-namespace
-{
-    using Small = char;
-    class Big { char m_dummy[2]; };
-}
+#pragma once
 
 template<typename T1, typename T2>
 class is_convertible
 {
+    using Small = char;
+    class Big { char m_dummy[2]; };
+
     /* Don't care about implementation */
     static Small _ConversionTest(const T2&);
     static Big   _ConversionTest(...);
