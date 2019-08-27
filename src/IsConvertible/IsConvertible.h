@@ -25,7 +25,7 @@ class is_convertible
     static T1    _MakeT1();
 
 public:
-    static constexpr bool value = ( sizeof(_MakeT1()) == sizeof(Small) );
+    static constexpr bool value = ( sizeof(_ConversionTest(_MakeT1())) == sizeof(Small) );
 };
 
 template<typename T1, typename T2>
