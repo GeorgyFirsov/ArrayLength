@@ -1,13 +1,16 @@
 # Utilites
 
-This repo contains various utilites for common computer usage and C++ programming.
+This repo contains various utilites for common computer usage and C++ programming. Fell free to use, modify and contribute :)
+My target is to build a large base of code with useful stuff.
 
 ## Table of contents
 
-- [ArrayLength](#ArrayLength)
-- [is_convertible and is_convertible_v](#is_convertible-and-is_convertible_v)
-- [ThrowsException and ThrowsAnyException](#ThrowsException-and-ThrowsAnyException)
-- [LookUp](#LookUp)
+- Utilites for programming
+  - [ArrayLength](#ArrayLength)
+  - [is_convertible and is_convertible_v](#is_convertible-and-is_convertible_v)
+  - [ThrowsException and ThrowsAnyException](#ThrowsException-and-ThrowsAnyException)
+- Utilites for another tasks
+  - [LookUp](#LookUp)
 
 ### ArrayLength
 `ArrayLength` is a function, that calculates length of C-style static array in compile time. Requires at least C++11.
