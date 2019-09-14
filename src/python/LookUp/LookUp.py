@@ -4,7 +4,7 @@
 # 
 # Author: Firsov Georgy
 # Contact: gfirsov007@gmail.com
-# Date: 25.07.2019
+# Date: 15.09.2019
 # Copyright © 2019 Firsov Georgy. All rights reserved.
 #
 
@@ -129,7 +129,7 @@ def parse_args() -> tuple:
                 arg = arg[1:]
             if arg.endswith('"'):
                 arg = arg[:-1]
-                
+
             args.append(arg)
 
     return operation, args
