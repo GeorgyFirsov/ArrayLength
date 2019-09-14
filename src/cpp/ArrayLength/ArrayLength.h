@@ -13,5 +13,7 @@
  *******************************************************/
 #pragma once
 
+#include <cstdio> // for size_t
+
 template<typename T, size_t Length>
-constexpr auto ArrayLength(const T(&)[Length]);
+constexpr size_t ArrayLength(const T(&)[Length]);
