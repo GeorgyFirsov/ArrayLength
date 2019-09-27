@@ -77,7 +77,8 @@ class LookupOperation(object):
                 for line in f:
                     for string in strings:
                         if string in line:
-                            print(f'{file} contains line "{line[:-1].strip()}" at {lineno}')
+                            readable_name = file.replace('\\/', '\\').replace('/', '\\')
+                            print(f'{readable_name} contains line "{line[:-1].strip()}" at {lineno}')
                     lineno += 1
         # In case of some errors just skip non-readable files
         except UnicodeDecodeError:
