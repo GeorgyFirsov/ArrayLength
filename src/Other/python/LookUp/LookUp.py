@@ -57,6 +57,10 @@ class LookupOperation(object):
                     self.__search_for_strings(full_name, strings)
                 elif isdir(full_name):
                     self.__process_with_subdirs(full_name, strings)
+        except FileNotFoundError:
+            if not self.__suppress_errors:
+                readable_name = directory.replace('\\/', '\\').replace('/', '\\')
+                print(f'\n[ Error ] Directory {readable_name} is inaccessible: no such directory\n')
         except PermissionError:
             if not self.__suppress_errors:
                 readable_name = directory.replace('\\/', '\\').replace('/', '\\')
@@ -68,6 +72,10 @@ class LookupOperation(object):
                 full_name = directory + '/' + name
                 if isfile(full_name):
                     self.__search_for_strings(full_name, strings)
+        except FileNotFoundError:
+            if not self.__suppress_errors:
+                readable_name = directory.replace('\\/', '\\').replace('/', '\\')
+                print(f'\n[ Error ] Directory {readable_name} is inaccessible: no such directory\n')
         except PermissionError:
             if not self.__suppress_errors:
                 readable_name = directory.replace('\\/', '\\').replace('/', '\\')
