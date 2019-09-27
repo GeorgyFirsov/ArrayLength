@@ -57,7 +57,8 @@ class LookupOperation(object):
                 elif isdir(full_name):
                     LookupOperation.__process_with_subdirs(full_name, strings)
         except PermissionError:
-            print(f'\n[ Error ] Directory {directory} is inaccessible: access denied\n')
+            readable_name = directory.replace('\\/', '\\').replace('/', '\\')
+            print(f'\n[ Error ] Directory {readable_name} is inaccessible: access denied\n')
 
     @staticmethod
     def __process_current_dir(directory: str, strings: set):
@@ -67,7 +68,8 @@ class LookupOperation(object):
                 if isfile(full_name):
                     LookupOperation.__search_for_strings(full_name, strings)
         except PermissionError:
-            print(f'\n[ Error ] Directory {directory} is inaccessible: access denied\n')
+            readable_name = directory.replace('\\/', '\\').replace('/', '\\')
+            print(f'\n[ Error ] Directory {readable_name} is inaccessible: access denied\n')
 
     @staticmethod
     def __search_for_strings(file: str, strings: set):
@@ -84,7 +86,8 @@ class LookupOperation(object):
         except UnicodeDecodeError:
             pass
         except PermissionError:
-            print(f'\n[ Error ] {file} can not be opened: access denied. Skipping...\n')
+            readable_name = file.replace('\\/', '\\').replace('/', '\\')
+            print(f'\n[ Error ] {readable_name} can not be opened: access denied. Skipping...\n')
 
     @staticmethod
     def __process_args(*args) -> tuple:
