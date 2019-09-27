@@ -60,12 +60,10 @@ class LookupOperation(object):
 
         except FileNotFoundError:
             if not self.__suppress_errors:
-                readable_name = directory.replace('\\/', '\\').replace('/', '\\')
-                print(f'\n[ Error ] Directory {readable_name} is inaccessible: no such directory\n')
+                print_error(directory, 'is inaccessible: no such directory')
         except PermissionError:
             if not self.__suppress_errors:
-                readable_name = directory.replace('\\/', '\\').replace('/', '\\')
-                print(f'\n[ Error ] Directory {readable_name} is inaccessible: access denied\n')
+                print_error(directory, 'is inaccessible: access denied')
 
     def __process_current_dir(self, directory: str, strings: set):
         try:
@@ -76,12 +74,10 @@ class LookupOperation(object):
 
         except FileNotFoundError:
             if not self.__suppress_errors:
-                readable_name = directory.replace('\\/', '\\').replace('/', '\\')
-                print(f'\n[ Error ] Directory {readable_name} is inaccessible: no such directory\n')
+                print_error(directory, 'is inaccessible: no such directory')
         except PermissionError:
             if not self.__suppress_errors:
-                readable_name = directory.replace('\\/', '\\').replace('/', '\\')
-                print(f'\n[ Error ] Directory {readable_name} is inaccessible: access denied\n')
+                print_error(directory, 'is inaccessible: access denied')
 
     def __search_for_strings(self, file: str, strings: set):
         try:
@@ -99,8 +95,7 @@ class LookupOperation(object):
             pass
         except PermissionError:
             if not self.__suppress_errors:
-                readable_name = file.replace('\\/', '\\').replace('/', '\\')
-                print(f'\n[ Error ] {readable_name} can not be opened: access denied. Skipping...\n')
+                print_error(file, 'can not be opened: access denied. Skipping...')
 
     @staticmethod
     def __process_args(*args) -> tuple:
@@ -164,6 +159,18 @@ def parse_args() -> tuple:
             args.append(arg)
 
     return operation, suppress_errors, args
+
+
+def print_error(name: str, message: str):
+    """Prints error message. Passed as argument name
+    will be modified by replacing sequences '\/' and
+    '/' with '\' to match Windows style.
+    
+    :param name: name of file or directory that caused an error
+    :param message: additional message
+    """
+    readable_name = name.replace('\\/', '\\').replace('/', '\\')
+    print(f'\n[ Error ] {readable_name} {message}\n')
 
 
 if __name__ == '__main__':
