@@ -15,11 +15,12 @@ from os.path import isfile, isdir
 
 usage = """Usage:
         
-python LookUp.py [dir=<search_dir>] [mode=<mode>] string1 [string2 [string3 ...]]
+python LookUp.py [--suppress_errors] [dir=<search_dir>] [mode=<mode>] string1 [string2 [string3 ...]]
         
 Searches strings string1, string2, etc. in all files in specified directory search_dir
         
 Parameters:
+    - suppress_errors - if set, no error messages will be displayed
     - dir - directory with files (by default - directory with script)
     - mode - type of search:
         0 - search in subdirectories too (default)
@@ -34,45 +35,45 @@ class LookupOperation(object):
     with strings you want to search.
     """
 
-    def __init__(self, operation_code: int = 0):
+    def __init__(self, operation_code: int = 0, suppress_errors: bool = False):
 
         op_codes = {
-              0: LookupOperation.__process_with_subdirs
-            , 1: LookupOperation.__process_current_dir
+              0: self.__process_with_subdirs
+            , 1: self.__process_current_dir
         }
 
         self.__operation = op_codes[operation_code]
+        self.__suppress_errors = suppress_errors
 
     def run(self, *args):
         directory, strings = LookupOperation.__process_args(*args)
         return self.__operation(directory, strings)
 
-    @staticmethod
-    def __process_with_subdirs(directory: str, strings: set):
+    def __process_with_subdirs(self, directory: str, strings: set):
         try:
             for name in listdir(directory):
                 full_name = directory + '/' + name
                 if isfile(full_name):
-                    LookupOperation.__search_for_strings(full_name, strings)
+                    self.__search_for_strings(full_name, strings)
                 elif isdir(full_name):
-                    LookupOperation.__process_with_subdirs(full_name, strings)
+                    self.__process_with_subdirs(full_name, strings)
         except PermissionError:
-            readable_name = directory.replace('\\/', '\\').replace('/', '\\')
-            print(f'\n[ Error ] Directory {readable_name} is inaccessible: access denied\n')
+            if not self.__suppress_errors:
+                readable_name = directory.replace('\\/', '\\').replace('/', '\\')
+                print(f'\n[ Error ] Directory {readable_name} is inaccessible: access denied\n')
 
-    @staticmethod
-    def __process_current_dir(directory: str, strings: set):
+    def __process_current_dir(self, directory: str, strings: set):
         try:
             for name in listdir(directory):
                 full_name = directory + '/' + name
                 if isfile(full_name):
-                    LookupOperation.__search_for_strings(full_name, strings)
+                    self.__search_for_strings(full_name, strings)
         except PermissionError:
-            readable_name = directory.replace('\\/', '\\').replace('/', '\\')
-            print(f'\n[ Error ] Directory {readable_name} is inaccessible: access denied\n')
+            if not self.__suppress_errors:
+                readable_name = directory.replace('\\/', '\\').replace('/', '\\')
+                print(f'\n[ Error ] Directory {readable_name} is inaccessible: access denied\n')
 
-    @staticmethod
-    def __search_for_strings(file: str, strings: set):
+    def __search_for_strings(self, file: str, strings: set):
         try:
             with open(file, 'r') as f:
                 lineno = 1
@@ -86,8 +87,9 @@ class LookupOperation(object):
         except UnicodeDecodeError:
             pass
         except PermissionError:
-            readable_name = file.replace('\\/', '\\').replace('/', '\\')
-            print(f'\n[ Error ] {readable_name} can not be opened: access denied. Skipping...\n')
+            if not self.__suppress_errors:
+                readable_name = file.replace('\\/', '\\').replace('/', '\\')
+                print(f'\n[ Error ] {readable_name} can not be opened: access denied. Skipping...\n')
 
     @staticmethod
     def __process_args(*args) -> tuple:
@@ -109,8 +111,8 @@ def main():
     if not validate_args():
         return
 
-    operation, args = parse_args()
-    lookup = LookupOperation(operation)
+    operation, suppress_errors, args = parse_args()
+    lookup = LookupOperation(operation, suppress_errors)
     lookup.run(*args)
 
 
@@ -135,10 +137,13 @@ def parse_args() -> tuple:
     """
     operation = 0
     args = list()
+    suppress_errors = False
 
     for arg in argv[1:]:
         if arg.startswith('mode='):
             operation = int(arg[5:])
+        elif arg == '--suppress_errors':
+            suppress_errors = True
         else:
             if arg.startswith('"'):
                 arg = arg[1:]
@@ -147,7 +152,7 @@ def parse_args() -> tuple:
 
             args.append(arg)
 
-    return operation, args
+    return operation, suppress_errors, args
 
 
 if __name__ == '__main__':
