@@ -15,7 +15,7 @@ from os.path import isfile, isdir
 
 usage = """Usage:
         
-python LookUp.py [--suppress_errors] [dir=<search_dir>] [mode=<mode>] string1 [string2 [string3 ...]]
+python LookUp.py [--suppress_errors] [--dir=<search_dir>] [--mode=<mode>] string1 [string2 [string3 ...]]
         
 Searches strings string1, string2, etc. in all files in specified directory search_dir
         
@@ -97,8 +97,8 @@ class LookupOperation(object):
         strings = set()
 
         for arg in args:
-            if arg.startswith('dir='):
-                directory = arg[4:]
+            if arg.startswith('--dir='):
+                directory = arg[6:]
             else:
                 strings.add(arg)
 
@@ -140,8 +140,8 @@ def parse_args() -> tuple:
     suppress_errors = False
 
     for arg in argv[1:]:
-        if arg.startswith('mode='):
-            operation = int(arg[5:])
+        if arg.startswith('--mode='):
+            operation = int(arg[7:])
         elif arg == '--suppress_errors':
             suppress_errors = True
         else:
