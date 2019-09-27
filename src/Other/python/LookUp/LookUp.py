@@ -49,19 +49,25 @@ class LookupOperation(object):
 
     @staticmethod
     def __process_with_subdirs(directory: str, strings: set):
-        for name in listdir(directory):
-            full_name = directory + '/' + name
-            if isfile(full_name):
-                LookupOperation.__search_for_strings(full_name, strings)
-            elif isdir(full_name):
-                LookupOperation.__process_with_subdirs(full_name, strings)
+        try:
+            for name in listdir(directory):
+                full_name = directory + '/' + name
+                if isfile(full_name):
+                    LookupOperation.__search_for_strings(full_name, strings)
+                elif isdir(full_name):
+                    LookupOperation.__process_with_subdirs(full_name, strings)
+        except PermissionError:
+            print(f'\nDirectory {directory} is inaccessible: access denied\n')
 
     @staticmethod
     def __process_current_dir(directory: str, strings: set):
-        for name in listdir(directory):
-            full_name = directory + '/' + name
-            if isfile(full_name):
-                LookupOperation.__search_for_strings(full_name, strings)
+        try:
+            for name in listdir(directory):
+                full_name = directory + '/' + name
+                if isfile(full_name):
+                    LookupOperation.__search_for_strings(full_name, strings)
+        except PermissionError:
+            print(f'\nDirectory {directory} is inaccessible: access denied\n')
 
     @staticmethod
     def __search_for_strings(file: str, strings: set):
@@ -141,4 +147,7 @@ def parse_args() -> tuple:
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print('\nUser interrupted an execution by Ctrl+C combination.\n')
