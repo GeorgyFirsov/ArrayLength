@@ -67,10 +67,12 @@ class LookupOperation(object):
     def __search_for_strings(file: str, strings: set):
         try:
             with open(file, 'r') as f:
+                lineno = 1
                 for line in f:
                     for string in strings:
                         if string in line:
-                            print(f'{file} contains line "{line[:-1]}"')
+                            print(f'{file} contains line "{line[:-1].strip()}" at {lineno}')
+                    lineno += 1
         except UnicodeDecodeError:
             pass  # Just skip non-readable file
 
