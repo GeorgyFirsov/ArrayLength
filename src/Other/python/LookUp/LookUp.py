@@ -73,8 +73,11 @@ class LookupOperation(object):
                         if string in line:
                             print(f'{file} contains line "{line[:-1].strip()}" at {lineno}')
                     lineno += 1
+        # In case of some errors just skip non-readable files
         except UnicodeDecodeError:
-            pass  # Just skip non-readable file
+            pass
+        except PermissionError:
+            print(f'\n{file} can not be opened: access denied. Skipping...\n')
 
     @staticmethod
     def __process_args(*args) -> tuple:
