@@ -6,6 +6,12 @@
  *  If we pass an array to function by reference, its
  *  type will be T(&)[Length]
  *  We use this fact here
+ *
+ *  Prameters:
+ *      - <unnamed> - static array
+ *
+ *  Return value:
+ *      - length of static array
  *******************************************************
  *  Author: Firsov Georgy
  *  Contact: gfirsov007@gmail.com

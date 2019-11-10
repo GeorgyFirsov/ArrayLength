@@ -4,6 +4,14 @@
  *  convertible to the second.
  *
  *  is_convertible_v is just a simplification of usage.
+ *
+ *  Prameters:
+ *      - T1 - first type
+ *      - T2 - second type
+ *
+ *  Return value:
+ *      - value == true - T1 is convertible to T2
+ *      - value == false - otherwise
  *******************************************************
  *  Author: Firsov Georgy
  *  Contact: gfirsov007@gmail.com

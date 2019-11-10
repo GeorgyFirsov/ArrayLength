@@ -6,6 +6,16 @@
  *  ThrowsAnyException is a function, that checks
  *  passed as first parameter callable it it throws
  *  any exception.
+ *
+ *  Prameters:
+ *      - func - callable (function, functor, etc.) to test
+ *      - args - variadic number of arguments to pass to func
+ *      - Exception (template parameter) - expected exception type
+ *        (assumed any if none provided)
+ *
+ *  Return value:
+ *      - true if func throws an expected exception
+ *      - false otherwise
  *******************************************************
  *  Author: Firsov Georgy
  *  Contact: gfirsov007@gmail.com
