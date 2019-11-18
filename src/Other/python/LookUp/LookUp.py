@@ -15,17 +15,28 @@ from os.path import isfile, isdir
 
 usage = """Usage:
         
-python LookUp.py [--suppress_errors] [--dir=<search_dir>] [--mode=<mode>] string1 [string2 [string3 ...]]
+python LookUp.py --dir=<search_dir> [--suppress_errors] [--mode=<mode>] [--filter="pattern1 pattern2 ..."] string1 [string2 [string3 ...]]
         
 Searches strings string1, string2, etc. in all files in specified directory search_dir
         
 Parameters:
-    - suppress_errors - if set, no error messages will be displayed
     - dir - directory with files (by default - directory with script)
+    - suppress_errors - if set, no error messages will be displayed
     - mode - type of search:
         0 - search in subdirectories too (default)
         1 - search only in current directory
+	- filter - substring that shoul be in the name of file. Filters are separated by spaces.
 """
+
+
+def any_in(filter: tuple, source: str) -> bool:
+    if filter is None:
+        return True
+    else:
+        for elem in filter:
+            if elem in source:
+                return True
+        return False
 
 
 class LookupOperation(object):
@@ -35,7 +46,7 @@ class LookupOperation(object):
     with strings you want to search.
     """
 
-    def __init__(self, operation_code: int = 0, suppress_errors: bool = False):
+    def __init__(self, operation_code: int = 0, suppress_errors: bool = False, filter: tuple = tuple()):
 
         op_codes = {
               0: self.__process_with_subdirs
@@ -44,6 +55,7 @@ class LookupOperation(object):
 
         self.__operation = op_codes[operation_code]
         self.__suppress_errors = suppress_errors
+        self.filter = None if filter == tuple() else filter
 
     def run(self, *args):
         directory, strings = LookupOperation.__process_args(*args)
@@ -53,7 +65,7 @@ class LookupOperation(object):
         try:
             for name in listdir(directory):
                 full_name = directory + '/' + name
-                if isfile(full_name):
+                if isfile(full_name) and any_in(self.filter, name):
                     self.__search_for_strings(full_name, strings)
                 elif isdir(full_name):
                     self.__process_with_subdirs(full_name, strings)
@@ -69,7 +81,7 @@ class LookupOperation(object):
         try:
             for name in listdir(directory):
                 full_name = directory + '/' + name
-                if isfile(full_name):
+                if isfile(full_name) and any_in(self.filter, name):
                     self.__search_for_strings(full_name, strings)
 
         except FileNotFoundError:
@@ -116,9 +128,9 @@ def main():
     """
     if not validate_args():
         return
-
-    operation, suppress_errors, args = parse_args()
-    lookup = LookupOperation(operation, suppress_errors)
+    
+    operation, suppress_errors, filter, args = parse_args()
+    lookup = LookupOperation(operation, suppress_errors, filter)
     lookup.run(*args)
 
 
@@ -135,6 +147,14 @@ def validate_args() -> bool:
     return True
 
 
+def remove_quotes(string: str) -> str:
+    if string.startswith('"'):
+        string = string[1:]
+    if string.endswith('"'):
+        string = string[:-1]
+    return string
+
+
 def parse_args() -> tuple:
     """Extracts operation type (mode) from args.
     If none provided, sets it to default (0).
@@ -143,6 +163,7 @@ def parse_args() -> tuple:
     """
     operation = 0
     args = list()
+    filter = tuple()
     suppress_errors = False
 
     for arg in argv[1:]:
@@ -150,15 +171,15 @@ def parse_args() -> tuple:
             operation = int(arg[7:])
         elif arg == '--suppress_errors':
             suppress_errors = True
+        elif arg.startswith('--filter='):
+            filter = tuple(remove_quotes(arg[9:]).split())
         else:
-            if arg.startswith('"'):
-                arg = arg[1:]
-            if arg.endswith('"'):
-                arg = arg[:-1]
+            args.append(remove_quotes(arg))
 
-            args.append(arg)
+    if filter == tuple():
+        filter = None
 
-    return operation, suppress_errors, args
+    return operation, suppress_errors, filter, args
 
 
 def print_error(name: str, message: str):
